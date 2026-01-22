@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="page-title">Super-Resolution & Fracture Detection</h1>
+
+<div class="card">
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required
+               onchange="previewInput(event)">
+        <br><br>
+        <button type="submit">Analyze</button>
+    </form>
+</div>
+
+<div class="image-grid">
+
+    <div class="card image-box">
+        <h3>Input (Low Resolution)</h3>
+        <img id="input-preview"
+             src="{{ url_for('input_file', filename=input_image) if input_image }}">
+    </div>
+
+    {% if output_image %}
+    <div class="card image-box">
+        <h3>Super-Resolution Result</h3>
+        <img src="{{ url_for('output_file', filename=output_image) }}">
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function previewInput(event) {
+    const img = document.getElementById("input-preview");
+    img.src = URL.createObjectURL(event.target.files[0]);
+}
+</script>
+
+{% endblock %}

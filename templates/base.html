@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>X-ray Super Resolution with Fracture Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>X-Rescue</h2>
+    <a href="/">Home</a>
+    <a href="/sr_detect">Super Resolution & Fracture Detection</a>
+    <a href="/detect_only">Fracture Detection</a>
+    <a href="/contact">✉ Contact Us</a>
+</div>
+
+<div class="main">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
