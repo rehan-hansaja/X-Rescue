@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #0b0f0e;
+    color: #e8f5f0;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    position: fixed;
+    background: #0f1f1b;
+    padding-top: 20px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    color: #2ecc71;
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 20px;
+    color: #cfeee1;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background: #1e3d34;
+    color: #2ecc71;
+}
+
+/* ---------- Main content ---------- */
+.main {
+    margin-left: 220px;
+    padding: 30px;
+}
+
+/* ---------- Headers ---------- */
+.page-title {
+    text-align: center;
+    font-size: 32px;
+    color: #2ecc71;
+}
+
+.subtitle {
+    text-align: center;
+    color: #a8d5c2;
+    margin-bottom: 30px;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    background: #121a18;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+}
+
+/* ---------- Buttons ---------- */
+button {
+    text-align: center;
+    background: #2ecc71;
+    color: #0b0f0e;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #27ae60;
+}
+
+/* ---------- Image grid ---------- */
+.image-grid {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.image-box img {
+    max-width: 280px;
+    border: 2px solid #2ecc71;
+    border-radius: 6px;
+}
+
+/* ---------- Forms ---------- */
+input[type="file"], input[type="text"], textarea {
+    background: #0f1f1b;
+    color: #e8f5f0;
+    border: 1px solid #2ecc71;
+    padding: 8px;
+    width: 100%;
+    border-radius: 5px;
+}
