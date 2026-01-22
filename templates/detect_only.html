@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="page-title">Fracture Detection Only</h1>
+
+<div class="card">
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <br><br>
+        <button type="submit">Detect Fracture</button>
+    </form>
+</div>
+
+{% if result %}
+<div class="card">
+    <h3>Result</h3>
+    <p>Status: <b>{{ result }}</b></p>
+    <p>Confidence: {{ confidence }}%</p>
+</div>
+{% endif %}
+
+{% endblock %}
