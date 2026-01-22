@@ -1,0 +1,45 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
+
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="page-title">X-Rescue </h1>
+<p class="subtitle">
+Enhancing Low-Resolution X-Rays through Super Resolution for accurate Fracture Detection.
+</p>
+
+<div class="image-box" style="text-align:center;">
+    <p>Low Resolution → Enhanced → Fracture Detection</p>
+</div>
+
+<div class="image-container" style="display: flex; justify-content: center;
+align-items: flex-start; gap: 30px; flex-wrap: wrap; margin-top: 30px;">
+    <!-- LR Input -->
+    <div class="image-box">
+        <h3>LR Input </h3>
+        <img id="input-preview" src="{{ url_for('static', filename='preview1.jpg') }}" alt="LR Input">
+    </div>
+
+    <!-- SR Output -->
+    <div class="image-box">
+        <h3>SR Output</h3>
+        <img id="sr-preview" src="{{ url_for('static', filename='preview2.jpg') }}" alt="SR Output">
+    </div>
+
+    <!-- Detection Output -->
+    <div class="image-box">
+        <h3>Detection Output</h3>
+        <img id="detected-preview" src="{{ url_for('static', filename='preview3.jpg') }}" alt="Detection Output">
+    </div>
+</div>
+
+{% endblock %}
