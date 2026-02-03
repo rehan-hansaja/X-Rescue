@@ -4,7 +4,6 @@ from sr_predict import run_sr
 from sr_predict import load_model
 from werkzeug.utils import secure_filename
 
-
 UPLOAD_FOLDER = "images/uploads"
 OUTPUT_FOLDER = "images/outputs"
 MODEL_PATH = "001_classicalSR_DIV2K_s48w8_SwinIR-M_x4.pth"
