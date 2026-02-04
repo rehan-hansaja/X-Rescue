@@ -10,7 +10,7 @@ print("SR device:", Device)
 MODEL_PATH = os.path.join(
     os.path.dirname(__file__),
     "models",
-    "swinir_best_psnr (3).pth"
+    "swinir_enhanced_best_psnr.pth"
 )
 
 def load_model():
