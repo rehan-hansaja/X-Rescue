@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Fracture Detection Result</h1>
+
+<div class="image-grid">
+    {% if output_image %}
+    <!-- Came from SR flow -->
+    <div class="image-box">
+        <h3>Super-Resolution</h3>
+        <img src="{{ url_for('output_file', filename=output_image) }}" alt="SR">
+    </div>
+    {% endif %}
+
+    <div class="image-box">
+        <h3>Input Image</h3>
+        <img src="{{ url_for('input_file', filename=input_image) }}" alt="Input">
+    </div>
+
+    <div class="image-box highlight">
+        <h3>Detection</h3>
+        <img src="{{ url_for('detect_file', filename=detect_image) }}" alt="Detection">
+    </div>
+</div>
+
+<div class="actions">
+    {% if output_image %}
+    <a href="{{ url_for('output_file', filename=output_image) }}" download>Download SR</a>
+    {% endif %}
+    <a href="{{ url_for('detect_file', filename=detect_image) }}" download>Download Result</a>
+</div>
+
+{% endblock %}
