@@ -4,18 +4,18 @@
 <h1>Fracture Detection Result</h1>
 
 <div class="image-grid">
+    <div class="image-box">
+        <h3>Input Image</h3>
+        <img src="{{ url_for('input_file', filename=input_image) }}" alt="Input">
+    </div>
+
     {% if output_image %}
-    <!-- Came from SR flow -->
+    <!-- SR flow: show SR between Input and Detection -->
     <div class="image-box">
         <h3>Super-Resolution</h3>
         <img src="{{ url_for('output_file', filename=output_image) }}" alt="SR">
     </div>
     {% endif %}
-
-    <div class="image-box">
-        <h3>Input Image</h3>
-        <img src="{{ url_for('input_file', filename=input_image) }}" alt="Input">
-    </div>
 
     <div class="image-box highlight">
         <h3>Detection</h3>

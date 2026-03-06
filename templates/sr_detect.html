@@ -14,16 +14,16 @@
     </form>
 </div>
 
-<div class="results-grid">
-    <!-- Left: Input (preview or uploaded) -->
-    <div class="result-card input-card">
+<div class="results-grid">-->
+<!-- Left: Input Preview -->
+    <div class="result-card input-card" id="input-card"
+         style="{% if not input_image %}display: none;{% endif %}">
         <h3>Low Resolution Input</h3>
         <div class="image-wrapper">
             <img id="input-preview"
-                 src="{% if input_image %}{{ url_for('input_file', filename=input_image) }}{% else %}{{ url_for('static', filename='preview1.png') }}{% endif %}"
+                 src="{% if input_image %}{{ url_for('input_file', filename=input_image) }}{% else %}#{% endif %}"
                  alt="Input X-ray"
-                 class="result-image"
-                 style="display: {% if input_image %}block{% else %}none{% endif %};">
+                 class="result-image">
         </div>
     </div>
 
@@ -206,9 +206,10 @@
 <script>
 function previewInput(event) {
     const preview = document.getElementById("input-preview");
+    const card = document.getElementById("input-card");
     if (event.target.files && event.target.files[0]) {
         preview.src = URL.createObjectURL(event.target.files[0]);
-        preview.style.display = "block";
+        card.style.display = "block";
     }
 }
 </script>
