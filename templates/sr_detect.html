@@ -2,7 +2,6 @@
 {% block content %}
 
 <h1 class="page-title">Super-Resolution & Fracture Detection</h1>
-<!--<link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">-->
 
 <div class="upload-card">
     <form method="POST" enctype="multipart/form-data">
@@ -59,6 +58,13 @@
 </div>
 {% endif %}
 
+<div id="loading-overlay" style="display:none;">
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <p id="loading-msg">Processing, please wait...</p>
+    </div>
+</div>
+
 <script>
 function previewInput(event) {
     const preview = document.getElementById("input-preview");
@@ -68,6 +74,17 @@ function previewInput(event) {
         card.style.display = "block";
     }
 }
+
+    document.querySelector("form").addEventListener("submit", function() {
+    document.getElementById("loading-msg").textContent = "Running Super Resolution, please wait...";
+    document.getElementById("loading-overlay").style.display = "flex";
+});
+
+    document.querySelector(".next-step form").addEventListener("submit", function() {
+    document.getElementById("loading-msg").textContent = "Detecting fractures, please wait...";
+    document.getElementById("loading-overlay").style.display = "flex";
+});
 </script>
+
 
 {% endblock %}
