@@ -77,6 +77,16 @@ def draw_fracture_visualization(img_path, boxes_512, scores, result, confidence,
         for x1,y1,x2,y2 in boxes_512
     ])
 
+    # Apply NMS to remove overlapping boxes
+    if len(boxes) > 0:
+        import torch
+        import torchvision
+        boxes_tensor = torch.tensor(boxes, dtype=torch.float32)
+        scores_tensor = torch.tensor(scores, dtype=torch.float32)
+        keep = torchvision.ops.nms(boxes_tensor, scores_tensor, iou_threshold=0.3)
+        boxes = boxes_tensor[keep].numpy()
+        scores = scores_tensor[keep].numpy()
+
     # Draw boxes
     if len(boxes) > 0:
         for box in boxes:
@@ -94,14 +104,15 @@ def draw_fracture_visualization(img_path, boxes_512, scores, result, confidence,
         color = (0, 255, 0)
         bg = (20, 60, 20)
 
-    font_scale = max(0.35, w / 600.0)
-    thick = 2 if w <= 50 else max(1, int(w / 300))
+    font_scale = max(0.4, w / 800.0)
+    thick = 2 if w <= 300 else max(1, int(w / 300))
     (tw, th), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thick)
 
     x, y = 15, 15 + th + 8
-    # if w > 512:
+
     cv2.rectangle(img, (x - 10, y - th - 10), (x + tw + 10, y + 10), bg, cv2.FILLED)
-    cv2.putText(img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 255), thick + 1)
+    if w > 512:
+        cv2.putText(img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 255), thick + 1)
     cv2.putText(img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, thick)
 
     cv2.imwrite(output_path, img)
@@ -112,7 +123,7 @@ def detect_fracture():
     sr_path = os.path.join(OUTPUT_FOLDER, filename)
     detect_path = os.path.join(DETECT_FOLDER, filename)
 
-    result, conf, boxes, scores = run_fracture_detection(detect_model, sr_path, 0.45)
+    result, conf, boxes, scores = run_fracture_detection(detect_model, sr_path, 0.7)
     draw_fracture_visualization(sr_path, boxes, scores, result, conf, detect_path)
 
     return render_template("final_result.html",
@@ -151,7 +162,7 @@ def detect_only():
         filename = new_filename
         detect_path = os.path.join(DETECT_FOLDER, filename)
 
-    result, conf, boxes, scores = run_fracture_detection(detect_model, input_path, 0.45)
+    result, conf, boxes, scores = run_fracture_detection(detect_model, input_path, 0.7)
     draw_fracture_visualization(input_path, boxes, scores, result, conf, detect_path)
 
     return render_template("final_result.html",
