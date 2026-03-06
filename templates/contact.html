@@ -4,18 +4,55 @@
 <h1 class="page-title">Contact Us</h1>
 
 <div class="card">
-    <form>
-        <label>Name</label><br>
-        <input type="text"><br><br>
+    <form id="contact-form">
+        <label class="upload-label">Name</label>
+        <input type="text" id="from_name" required placeholder="Your name"><br><br>
 
-        <label>Email</label><br>
-        <input type="text"><br><br>
+        <label class="upload-label">Email</label>
+        <input type="text" id="from_email" required placeholder="Your email"><br><br>
 
-        <label>Message</label><br>
-        <textarea rows="5"></textarea><br><br>
+        <label class="upload-label">Message</label>
+        <textarea id="message" rows="5" required placeholder="Your message..."></textarea><br><br>
 
-        <button type="submit">Send</button>
+        <button type="submit" class="analyze-btn" id="send-btn">Send Message</button>
+        <p id="status-msg" style="margin-top:14px; color: var(--accent); font-weight:600;"></p>
     </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+    emailjs.init("{{ emailjs_public_key }}");  // replace with your EmailJS public key
+
+    document.getElementById("contact-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const btn = document.getElementById("send-btn");
+        const status = document.getElementById("status-msg");
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+
+        const templateParams = {
+            from_name:  document.getElementById("from_name").value,
+            from_email: document.getElementById("from_email").value,
+            message:    document.getElementById("message").value
+        };
+
+        emailjs.send("{{ emailjs_service_id }}", "{{ emailjs_template_id }}", templateParams)
+            .then(() => {
+                status.textContent = "✅ Message sent successfully!";
+                status.style.color = "var(--accent)";
+                document.getElementById("contact-form").reset();
+                btn.disabled = false;
+                btn.textContent = "Send Message";
+            })
+        .catch((error) => {
+            status.textContent = "❌ Failed to send. Please try again.";
+            status.style.color = "#ef4444";
+            btn.disabled = false;
+            btn.textContent = "Send Message";
+            console.error("EmailJS error:", error);
+        });
+    });
+</script>
 
 {% endblock %}

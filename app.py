@@ -1,10 +1,13 @@
 import os
 import cv2
 import numpy as np
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, send_from_directory
 from werkzeug.utils import secure_filename
 from sr_predict import run_sr, load_model as load_sr_model
 from detect_predict import run_fracture_detection, load_detection_model
+
+load_dotenv()
 
 UPLOAD_FOLDER = "images/uploads"
 OUTPUT_FOLDER = "images/outputs"
@@ -172,7 +175,15 @@ def detect_file(filename):
 
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    key = os.environ.get("EMAILJS_PUBLIC_KEY")
+    service = os.environ.get("EMAILJS_SERVICE_ID")
+    template = os.environ.get("EMAILJS_TEMPLATE_ID")
+    print(f"KEY: {key}, SERVICE: {service}, TEMPLATE: {template}")
+    return render_template("contact.html",
+        emailjs_public_key=key,
+        emailjs_service_id=service,
+        emailjs_template_id=template
+    )
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 7860))
