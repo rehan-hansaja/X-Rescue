@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="light">
 <head>
     <title>X-ray Super Resolution with Fracture Detection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Apply saved theme immediately to avoid flash
+        const saved = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', saved);
+    </script>
 </head>
 <body>
+
+<!-- Mobile hamburger -->
+<button class="hamburger" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
 <div class="sidebar">
     <h2>X-Rescue</h2>
@@ -12,11 +22,42 @@
     <a href="/sr_detect">Super Resolution & Fracture Detection</a>
     <a href="/detect_only">Fracture Detection</a>
     <a href="/contact">✉ Contact Us</a>
+
+    <div class="theme-toggle">
+        <button onclick="toggleTheme()" id="theme-btn">🌙 Dark Mode</button>
+    </div>
 </div>
 
 <div class="main">
     {% block content %}{% endblock %}
 </div>
+
+<script>
+    function toggleTheme() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const newTheme = isDark ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        document.getElementById('theme-btn').textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
+        localStorage.setItem('theme', newTheme);
+    }
+
+    function toggleSidebar() {
+        document.querySelector('.sidebar').classList.toggle('open');
+        document.getElementById('overlay').classList.toggle('open');
+    }
+
+    function closeSidebar() {
+        document.querySelector('.sidebar').classList.remove('open');
+        document.getElementById('overlay').classList.remove('open');
+    }
+
+    // Set correct button label on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const saved = localStorage.getItem('theme') || 'light';
+        const btn = document.getElementById('theme-btn');
+        btn.textContent = saved === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+</script>
 
 </body>
 </html>

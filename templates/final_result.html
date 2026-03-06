@@ -25,9 +25,9 @@
 
 <div class="actions">
     {% if output_image %}
-    <a href="{{ url_for('output_file', filename=output_image) }}" download>Download SR</a>
+    <a href="{{ url_for('output_file', filename=output_image) }}" download class="download-btn">Download Super Resolution</a>
     {% endif %}
-    <a href="{{ url_for('detect_file', filename=detect_image) }}" download>Download Result</a>
+    <a href="{{ url_for('detect_file', filename=detect_image) }}" download class="download-btn">Download Detection</a>
 </div>
 
 {% endblock %}

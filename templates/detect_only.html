@@ -3,12 +3,27 @@
 
 <h1 class="page-title">Fracture Detection Only</h1>
 
-<div class="card">
+<div class="upload-card">
     <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*" required>
-        <br><br>
-        <button type="submit">Detect Fracture</button>
+        <label for="image-upload" class="upload-label">
+            Upload X-ray Image
+        </label>
+        <input type="file" id="image-upload" name="image" accept="image/*" required
+               onchange="previewInput(event)" class="file-input">
+        <button type="submit" class="analyze-btn">Detect Fracture</button>
     </form>
+
+    <!-- Input Preview -->
+    <div class="result-card input-card" id="input-card"
+         style="{% if not input_image %}display: none;{% endif %}">
+        <h3>Low Resolution Input</h3>
+        <div class="image-wrapper">
+            <img id="input-preview"
+                 src="{% if input_image %}{{ url_for('input_file', filename=input_image) }}{% else %}#{% endif %}"
+                 alt="Input X-ray"
+                 class="result-image">
+        </div>
+    </div>
 </div>
 
 {% if result %}
@@ -18,5 +33,16 @@
     <p>Confidence: {{ confidence }}%</p>
 </div>
 {% endif %}
+
+<script>
+function previewInput(event) {
+    const preview = document.getElementById("input-preview");
+    const card = document.getElementById("input-card");
+    if (event.target.files && event.target.files[0]) {
+        preview.src = URL.createObjectURL(event.target.files[0]);
+        card.style.display = "block";
+    }
+}
+</script>
 
 {% endblock %}

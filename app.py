@@ -32,9 +32,23 @@ def sr_detect():
 
         filename = secure_filename(file.filename)
         input_path = os.path.join(UPLOAD_FOLDER, filename)
-        output_path = os.path.join(OUTPUT_FOLDER, filename)
 
         file.save(input_path)
+
+        # Convert jfif to jpg if needed
+        if filename.lower().endswith('.jfif'):
+            img_temp = cv2.imread(input_path)
+            if img_temp is None:
+                return "Could not read image", 400
+            new_filename = filename.rsplit('.', 1)[0] + '.jpg'
+            new_input_path = os.path.join(UPLOAD_FOLDER, new_filename)
+            cv2.imwrite(new_input_path, img_temp)
+            os.remove(input_path)
+            input_path = new_input_path
+            filename = new_filename
+
+        output_path = os.path.join(OUTPUT_FOLDER, filename)
+
         run_sr(sr_model, input_path, output_path)
 
         return render_template(
@@ -233,14 +247,15 @@ def draw_fracture_visualization(img_path, boxes_512, scores, result, confidence,
         color = (0, 255, 0)
         bg = (20, 60, 20)
 
-    font_scale = max(0.8, w / 1000.0)
-    thick = 2 if w <= 512 else 3
+    font_scale = max(0.35, w / 600.0)
+    thick = 2 if w <= 50 else max(1, int(w / 300))
     (tw, th), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thick)
 
     x, y = 15, 15 + th + 8
-    cv2.rectangle(img, (x-10, y-th-10), (x+tw+10, y+10), bg, cv2.FILLED)
-    cv2.putText(img, label, (x,y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255,255,255), thick+1)
-    cv2.putText(img, label, (x,y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, thick)
+    # if w > 512:
+    cv2.rectangle(img, (x - 10, y - th - 10), (x + tw + 10, y + 10), bg, cv2.FILLED)
+    cv2.putText(img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 255), thick + 1)
+    cv2.putText(img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, thick)
 
     cv2.imwrite(output_path, img)
 
@@ -276,14 +291,26 @@ def detect_only():
 
     file.save(input_path)
 
+    # Convert jfif to jpg if needed
+    if filename.lower().endswith('.jfif'):
+        img_temp = cv2.imread(input_path)
+        if img_temp is None:
+            return "Could not read image", 400
+        new_filename = filename.rsplit('.', 1)[0] + '.jpg'
+        new_input_path = os.path.join(UPLOAD_FOLDER, new_filename)
+        cv2.imwrite(new_input_path, img_temp)
+        os.remove(input_path)
+        input_path = new_input_path
+        filename = new_filename
+        detect_path = os.path.join(DETECT_FOLDER, filename)
+
     result, conf, boxes, scores = run_fracture_detection(detect_model, input_path, 0.45)
     draw_fracture_visualization(input_path, boxes, scores, result, conf, detect_path)
 
     return render_template("final_result.html",
                            input_image=filename,
-                           output_image=None,  # no SR here
+                           output_image=None,
                            detect_image=filename,
-                           # result=result,
                            confidence=conf
                            )
 
