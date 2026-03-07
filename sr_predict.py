@@ -99,4 +99,10 @@ def run_sr(model, input_path, output_path):
     output = (output * 255).astype(np.uint8)
     output = cv2.cvtColor(output, cv2.COLOR_RGB2BGR)
 
+    # Blend SR with original to preserve fracture details
+    input_bgr = cv2.imread(input_path)
+    input_resized = cv2.resize(input_bgr, (output.shape[1], output.shape[0]),
+                               interpolation=cv2.INTER_LANCZOS4)
+    output = cv2.addWeighted(output, 0.6, input_resized, 0.4, 0)
+
     cv2.imwrite(output_path, output)

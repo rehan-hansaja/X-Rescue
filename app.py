@@ -123,7 +123,7 @@ def detect_fracture():
     sr_path = os.path.join(OUTPUT_FOLDER, filename)
     detect_path = os.path.join(DETECT_FOLDER, filename)
 
-    result, conf, boxes, scores = run_fracture_detection(detect_model, sr_path, 0.7)
+    result, conf, boxes, scores = run_fracture_detection(detect_model, sr_path, 0.6)
     draw_fracture_visualization(sr_path, boxes, scores, result, conf, detect_path)
 
     return render_template("final_result.html",
@@ -162,7 +162,7 @@ def detect_only():
         filename = new_filename
         detect_path = os.path.join(DETECT_FOLDER, filename)
 
-    result, conf, boxes, scores = run_fracture_detection(detect_model, input_path, 0.7)
+    result, conf, boxes, scores = run_fracture_detection(detect_model, input_path, 0.6)
     draw_fracture_visualization(input_path, boxes, scores, result, conf, detect_path)
 
     return render_template("final_result.html",
