@@ -85,6 +85,7 @@ def run_sr(model, input_path, output_path):
     device = next(model.parameters()).device
 
     img = cv2.imread(input_path, cv2.IMREAD_COLOR)
+    original_h, original_w = img.shape[:2]  # save original size
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = img.astype(np.float32) / 255.0
     img = cv2.resize(img, (64, 64), interpolation=cv2.INTER_CUBIC)
@@ -99,10 +100,17 @@ def run_sr(model, input_path, output_path):
     output = (output * 255).astype(np.uint8)
     output = cv2.cvtColor(output, cv2.COLOR_RGB2BGR)
 
+    # # Blend SR with original to preserve fracture details
+    # input_bgr = cv2.imread(input_path)
+    # input_resized = cv2.resize(input_bgr, (output.shape[1], output.shape[0]),
+    #                            interpolation=cv2.INTER_LANCZOS4)
+    # output = cv2.addWeighted(output, 0.6, input_resized, 0.4, 0)
+
+    # Resize SR output back to original input size
+    output = cv2.resize(output, (original_w, original_h), interpolation=cv2.INTER_LANCZOS4)
+
     # Blend SR with original to preserve fracture details
     input_bgr = cv2.imread(input_path)
-    input_resized = cv2.resize(input_bgr, (output.shape[1], output.shape[0]),
-                               interpolation=cv2.INTER_LANCZOS4)
-    output = cv2.addWeighted(output, 0.6, input_resized, 0.4, 0)
+    output = cv2.addWeighted(output, 0.6, input_bgr, 0.4, 0)
 
     cv2.imwrite(output_path, output)
