@@ -4,20 +4,24 @@
 <h1 class="page-title">Fracture Detection Only</h1>
 
 <div class="upload-card">
+    <!-- Form for uploading X-ray images to detect fractures -->
     <form method="POST" enctype="multipart/form-data">
         <label for="image-upload" class="upload-label">
             Upload X-ray Image
         </label>
+        <!-- File input field that accepts only image files -->
         <input type="file" id="image-upload" name="image" accept="image/*" required
                onchange="previewInput(event)" class="file-input">
         <button type="submit" class="analyze-btn">Detect Fracture</button>
     </form>
 
-    <!-- Input Preview -->
+    <!-- Input Image Preview Section -->
+    <!-- Shows a preview of the uploaded X-ray image -->
     <div class="result-card input-card" id="input-card"
          style="{% if not input_image %}display: none;{% endif %}">
         <h3>Low Resolution Input</h3>
         <div class="image-wrapper">
+            <!-- Display uploaded image from server if available -->
             <img id="input-preview"
                  src="{% if input_image %}{{ url_for('input_file', filename=input_image) }}{% else %}#{% endif %}"
                  alt="Input X-ray"
@@ -26,14 +30,18 @@
     </div>
 </div>
 
+<!-- Results Section - Only displayed when a detection result is available -->
 {% if result %}
 <div class="card">
     <h3>Result</h3>
+    <!-- Display the fracture detection status -->
     <p>Status: <b>{{ result }}</b></p>
+    <!-- Display confidence score as percentage -->
     <p>Confidence: {{ confidence }}%</p>
 </div>
 {% endif %}
 
+<!-- Loading Overlay - Shows while the server processes the image -->
 <div id="loading-overlay" style="display:none;">
     <div class="loading-box">
         <div class="spinner"></div>
@@ -42,17 +50,33 @@
 </div>
 
 <script>
+/**
+ * Preview the selected image before uploading
+ * Creates an object URL to display the image immediately after file selection
+ * @param {Event} event - The file input change event
+ */
 function previewInput(event) {
     const preview = document.getElementById("input-preview");
     const card = document.getElementById("input-card");
+
+    // Check if a file was actually selected
     if (event.target.files && event.target.files[0]) {
+        // Create a temporary URL for the selected file to display preview
         preview.src = URL.createObjectURL(event.target.files[0]);
+        // Show the preview card (was hidden if no image was uploaded)
         card.style.display = "block";
     }
 }
 
-    document.querySelector("form").addEventListener("submit", function() {
+/**
+ * Handle form submission
+ * Shows loading overlay to provide visual feedback while server processes the image
+ * This prevents user from submitting multiple times and indicates processing status
+ */
+document.querySelector("form").addEventListener("submit", function() {
+    // Update loading message to be specific to fracture detection task
     document.getElementById("loading-msg").textContent = "Detecting fractures, please wait...";
+    // Show the loading overlay (centered spinner with message)
     document.getElementById("loading-overlay").style.display = "flex";
 });
 </script>

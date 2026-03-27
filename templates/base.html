@@ -6,55 +6,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
         // Apply saved theme immediately to avoid flash
+        // This runs before page renders to prevent theme flickering
         const saved = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', saved);
     </script>
 </head>
 <body>
 
-<!-- Mobile hamburger -->
+<!-- Mobile hamburger button: visible on small screens to toggle sidebar menu -->
 <button class="hamburger" onclick="toggleSidebar()">☰</button>
+<!-- Overlay layer that appears when sidebar is open on mobile; clicking it closes the sidebar -->
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
+<!-- Sidebar navigation menu -->
 <div class="sidebar">
+    <!-- Application logo/title -->
     <h2>X-Rescue</h2>
+    <!-- Navigation links using Flask url_for for dynamic routing -->
     <a href="/">Home</a>
     <a href="/sr_detect">Super Resolution & Fracture Detection</a>
     <a href="/detect_only">Fracture Detection</a>
     <a href="/contact">✉ Contact Us</a>
 
+    <!-- Theme toggle button container -->
     <div class="theme-toggle">
         <button onclick="toggleTheme()" id="theme-btn">🌙 Dark Mode</button>
     </div>
 </div>
 
+<!-- Main content area where Flask templates will inject page-specific content -->
 <div class="main">
     {% block content %}{% endblock %}
 </div>
 
 <script>
+    /**
+     * Toggles between light and dark themes
+     * Updates the data-theme attribute on html element, changes button text,
+     * and persists the preference in localStorage for future visits
+     */
     function toggleTheme() {
+        // Check current theme by reading data-theme attribute
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        // Determine new theme (opposite of current)
         const newTheme = isDark ? 'light' : 'dark';
+        // Apply new theme to html element (CSS will use this for styling)
         document.documentElement.setAttribute('data-theme', newTheme);
+        // Update button text to reflect the next available action
         document.getElementById('theme-btn').textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
+        // Save user preference to localStorage so it persists across page loads
         localStorage.setItem('theme', newTheme);
     }
 
+    /**
+     * Opens the sidebar navigation menu on mobile devices
+     * Adds 'open' class to sidebar and overlay elements for CSS transitions
+     */
     function toggleSidebar() {
         document.querySelector('.sidebar').classList.toggle('open');
         document.getElementById('overlay').classList.toggle('open');
     }
 
+    /**
+     * Closes the sidebar navigation menu
+     * Removes 'open' class from both sidebar and overlay
+     */
     function closeSidebar() {
         document.querySelector('.sidebar').classList.remove('open');
         document.getElementById('overlay').classList.remove('open');
     }
 
-    // Set correct button label on load
+    // Event listener that runs when DOM is fully loaded
     document.addEventListener('DOMContentLoaded', () => {
+        // Retrieve saved theme preference or default to 'light'
         const saved = localStorage.getItem('theme') || 'light';
+        // Get reference to the theme toggle button
         const btn = document.getElementById('theme-btn');
+        // Set the correct button label based on current theme
+        // If theme is dark, show Light Mode option; if light, show Dark Mode option
         btn.textContent = saved === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
     });
 </script>

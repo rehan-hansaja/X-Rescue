@@ -3,30 +3,39 @@
 
 <h1>Fracture Detection Result</h1>
 
+<!-- Grid layout to display images side by side for comparison -->
 <div class="image-grid">
+    <!-- Input Image Box - Shows the original uploaded X-ray -->
     <div class="image-box">
         <h3>Input Image</h3>
         <img src="{{ url_for('input_file', filename=input_image) }}" alt="Input">
     </div>
 
+    <!-- Super-Resolution Image Box - Conditionally displayed -->
     {% if output_image %}
     <!-- SR flow: show SR between Input and Detection -->
+    <!-- Only appears when super-resolution was applied (SR + Detection workflow) -->
     <div class="image-box">
         <h3>Super-Resolution</h3>
         <img src="{{ url_for('output_file', filename=output_image) }}" alt="SR">
     </div>
     {% endif %}
 
+    <!-- Detection Image Box - Shows fracture detection visualization -->
+    <!-- Highlight class emphasizes this as the main result -->
     <div class="image-box highlight">
         <h3>Detection</h3>
         <img src="{{ url_for('detect_file', filename=detect_image) }}" alt="Detection">
     </div>
 </div>
 
+<!-- Download Buttons Section -->
 <div class="actions">
+    <!-- Download button for Super-Resolution image (only shown if SR was applied) -->
     {% if output_image %}
     <a href="{{ url_for('output_file', filename=output_image) }}" download class="download-btn">Download Super Resolution</a>
     {% endif %}
+    <!-- Download button for Detection visualization (always shown) -->
     <a href="{{ url_for('detect_file', filename=detect_image) }}" download class="download-btn">Download Detection</a>
 </div>
 

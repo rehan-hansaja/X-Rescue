@@ -1,30 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- Main page title with application name -->
 <h1 class="page-title">X-Rescue </h1>
+<!-- Subtitle explaining the application's core functionality -->
 <p class="subtitle">
 Enhancing Low-Resolution X-Rays through Super Resolution for accurate Fracture Detection.
 </p>
 
+<!-- Visual workflow indicator showing the three-step process -->
 <div class="image-box" style="text-align:center;">
     <p>Low Resolution → Enhanced → Fracture Detection</p>
 </div>
 
+<!-- Container for displaying example images demonstrating the pipeline -->
 <div class="image-container" style="display: flex; justify-content: center;
 align-items: flex-start; gap: 30px; flex-wrap: wrap; margin-top: 30px;">
-    <!-- LR Input -->
+
+    <!-- Low Resolution Input Example Box -->
+    <!-- Shows a sample low-resolution X-ray image (before enhancement) -->
     <div class="image-box">
         <h3>LR Input </h3>
         <img id="input-preview" src="{{ url_for('static', filename='preview1.webp') }}" alt="LR Input">
     </div>
 
-    <!-- SR Output -->
+    <!-- Super Resolution Output Example Box -->
+    <!-- Shows the enhanced version after super-resolution processing -->
     <div class="image-box">
         <h3>SR Output</h3>
         <img id="sr-preview" src="{{ url_for('static', filename='preview2.webp') }}" alt="SR Output">
     </div>
 
-    <!-- Detection Output -->
+    <!-- Fracture Detection Output Example Box -->
+    <!-- Shows the final result with fracture detection visualization -->
     <div class="image-box">
         <h3>Detection Output</h3>
         <img id="detected-preview" src="{{ url_for('static', filename='preview3.webp') }}" alt="Detection Output">

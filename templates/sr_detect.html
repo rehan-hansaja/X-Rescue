@@ -3,19 +3,23 @@
 
 <h1 class="page-title">Super-Resolution & Fracture Detection</h1>
 
+<!-- Upload Section - Form for submitting low-resolution X-ray images -->
 <div class="upload-card">
     <form method="POST" enctype="multipart/form-data">
         <label for="image-upload" class="upload-label">
             Upload Low-Resolution X-ray Image
         </label>
+        <!-- File input with image filter and preview trigger -->
         <input type="file" id="image-upload" name="image" accept="image/*" required
                onchange="previewInput(event)" class="file-input">
         <button type="submit" class="analyze-btn">Enhance Resolution</button>
     </form>
 </div>
 
+<!-- Results Grid - Displays input and output images side by side -->
 <div class="results-grid">
-<!-- Left: Input Preview -->
+    <!-- Left Column: Input Image Preview -->
+    <!-- Card is hidden until an image is uploaded or returned from server -->
     <div class="result-card input-card" id="input-card"
          style="{% if not input_image %}display: none;{% endif %}">
         <h3>Low Resolution Input</h3>
@@ -27,7 +31,8 @@
         </div>
     </div>
 
-    <!-- Right: Super-Resolution result (only after processing) -->
+    <!-- Right Column: Super-Resolution Result -->
+    <!-- Only displayed after processing is complete and output_image exists -->
     {% if output_image %}
     <div class="result-card sr-card">
         <h3>Super-Resolution Result (4×)</h3>
@@ -37,6 +42,7 @@
                  class="result-image">
         </div>
 
+        <!-- Download button for the enhanced image -->
         <div class="actions">
             <a href="{{ url_for('output_file', filename=output_image) }}"
                download class="download-btn">
@@ -47,9 +53,12 @@
     {% endif %}
 </div>
 
+<!-- Continue Button - Only shown after super-resolution is complete -->
+<!-- Allows user to proceed to fracture detection with the enhanced image -->
 {% if output_image %}
 <div class="next-step">
     <form action="{{ url_for('detect_fracture') }}" method="post">
+        <!-- Pass the enhanced image filename to the fracture detection route -->
         <input type="hidden" name="filename" value="{{ output_image }}">
         <button type="submit" class="continue-btn">
             Continue to Fracture Detection →
@@ -58,6 +67,7 @@
 </div>
 {% endif %}
 
+<!-- Loading Overlay - Visual feedback during processing -->
 <div id="loading-overlay" style="display:none;">
     <div class="loading-box">
         <div class="spinner"></div>
@@ -66,25 +76,42 @@
 </div>
 
 <script>
+/**
+ * Preview the selected image immediately after file selection
+ * Creates a temporary object URL to show the image before upload
+ * @param {Event} event - The file input change event
+ */
 function previewInput(event) {
     const preview = document.getElementById("input-preview");
     const card = document.getElementById("input-card");
+
+    // Check if a file was actually selected
     if (event.target.files && event.target.files[0]) {
+        // Create a temporary URL for the selected file
         preview.src = URL.createObjectURL(event.target.files[0]);
+        // Show the preview card
         card.style.display = "block";
     }
 }
 
-    document.querySelector("form").addEventListener("submit", function() {
+/**
+ * Handle the super-resolution form submission
+ * Shows loading overlay with specific message for SR processing
+ */
+document.querySelector("form").addEventListener("submit", function() {
     document.getElementById("loading-msg").textContent = "Running Super Resolution, please wait...";
     document.getElementById("loading-overlay").style.display = "flex";
 });
 
-    document.querySelector(".next-step form").addEventListener("submit", function() {
+/**
+ * Handle the continue to fracture detection form submission
+ * Shows loading overlay with specific message for detection processing
+ * Note: This only exists if output_image is present (after SR is complete)
+ */
+document.querySelector(".next-step form").addEventListener("submit", function() {
     document.getElementById("loading-msg").textContent = "Detecting fractures, please wait...";
     document.getElementById("loading-overlay").style.display = "flex";
 });
 </script>
-
 
 {% endblock %}

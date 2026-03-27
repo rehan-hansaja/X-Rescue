@@ -4,6 +4,7 @@
 <h1 class="page-title">Contact Us</h1>
 
 <div class="card">
+    <!-- Contact form that sends messages via EmailJS service -->
     <form id="contact-form">
         <label class="upload-label">Name</label>
         <input type="text" id="from_name" required placeholder="Your name"><br><br>
@@ -15,41 +16,64 @@
         <textarea id="message" rows="5" required placeholder="Your message..."></textarea><br><br>
 
         <button type="submit" class="analyze-btn" id="send-btn">Send Message</button>
+        <!-- Status message area to show success/error feedback to user -->
         <p id="status-msg" style="margin-top:14px; color: var(--accent); font-weight:600;"></p>
     </form>
 </div>
 
+<!-- EmailJS library for client-side email sending without backend server -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
+    // Initialize EmailJS with the public key from Flask backend
+    // This key is injected securely from the server-side configuration
     emailjs.init("{{ emailjs_public_key }}");  // replace with your EmailJS public key
 
+    /**
+     * Handle contact form submission
+     * Sends email using EmailJS service without page reload
+     * Provides visual feedback during and after the sending process
+     */
     document.getElementById("contact-form").addEventListener("submit", function(e) {
+        // Prevent default form submission to handle everything client-side
         e.preventDefault();
 
+        // Get references to button and status message elements
         const btn = document.getElementById("send-btn");
         const status = document.getElementById("status-msg");
+
+        // Disable button and show sending state to prevent duplicate submissions
         btn.disabled = true;
         btn.textContent = "Sending...";
 
+        // Prepare the data to be sent via EmailJS
+        // This matches the template variables configured in your EmailJS account
         const templateParams = {
-            from_name:  document.getElementById("from_name").value,
-            from_email: document.getElementById("from_email").value,
-            message:    document.getElementById("message").value
+            from_name:  document.getElementById("from_name").value,   // Sender's name
+            from_email: document.getElementById("from_email").value,  // Sender's email address
+            message:    document.getElementById("message").value      // The actual message content
         };
 
+        // Send the email using EmailJS service
+        // Parameters: service ID, template ID, and the template variables
         emailjs.send("{{ emailjs_service_id }}", "{{ emailjs_template_id }}", templateParams)
             .then(() => {
+                // Success: Show confirmation message
                 status.textContent = "✅ Message sent successfully!";
                 status.style.color = "var(--accent)";
+                // Clear all form fields for next message
                 document.getElementById("contact-form").reset();
+                // Re-enable the send button
                 btn.disabled = false;
                 btn.textContent = "Send Message";
             })
         .catch((error) => {
+            // Error: Show error message to user
             status.textContent = "❌ Failed to send. Please try again.";
             status.style.color = "#ef4444";
+            // Re-enable the send button so user can try again
             btn.disabled = false;
             btn.textContent = "Send Message";
+            // Log the detailed error to console for debugging
             console.error("EmailJS error:", error);
         });
     });
