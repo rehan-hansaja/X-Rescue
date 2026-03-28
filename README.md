@@ -10,6 +10,8 @@ pinned: false
 
 
 # X-Rescue
+Try Now : https://huggingface.co/spaces/rehanh01/X-Rescue 
+
 X-Rescue: Enhancing Low-Resolution X-Rays through Super Resolution for accurate Fracture Detection. 
 
 Research Aim : Develop a deep learning-based super-resolution solution to enhance low-resolution X-ray images with integrated fracture detection for accurate diagnosis.

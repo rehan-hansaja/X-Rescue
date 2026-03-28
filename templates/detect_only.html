@@ -3,6 +3,17 @@
 
 <h1 class="page-title">Fracture Detection Only</h1>
 
+<!-- Display flash messages for errors -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" style="background-color: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #dc2626;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
 <div class="upload-card">
     <!-- Form for uploading X-ray images to detect fractures -->
     <form method="POST" enctype="multipart/form-data">
