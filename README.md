@@ -1,13 +1,3 @@
----
-title: X-Rescue
-emoji: 🏥
-colorFrom: blue
-colorTo: green
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 
 # X-Rescue
 Try Now : https://huggingface.co/spaces/rehanh01/X-Rescue 
